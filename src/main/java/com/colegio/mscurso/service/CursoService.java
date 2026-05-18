@@ -1,6 +1,6 @@
 package com.colegio.mscurso.service;
 
-import com.colegio.mscurso.client.ProfesorClient; 
+import com.colegio.mscurso.client.ProfesorClient;
 import com.colegio.mscurso.dto.CursoRequestDTO;
 import com.colegio.mscurso.dto.CursoResponseDTO;
 import com.colegio.mscurso.model.Curso;
@@ -19,14 +19,16 @@ import java.util.stream.Collectors;
 public class CursoService {
 
     private final CursoRepository cursoRepository;
-    private final ProfesorClient profesorClient; 
+
+    private final ProfesorClient profesorClient;
 
     private CursoResponseDTO mapToDTO(Curso c) {
-        return new CursoResponseDTO(c.getId(), c.getNombre(), c.getSeccion(), c.getProfesorId());
+        return new CursoResponseDTO(
+                c.getId(), c.getNombre(), c.getSeccion(), c.getProfesorId());
     }
 
     private void validarProfesorJefe(Long profesorId) {
-        if (profesorId == null) return;
+        if (profesorId == null) return; 
 
         try {
             profesorClient.obtenerPorId(profesorId);
@@ -51,7 +53,6 @@ public class CursoService {
     }
 
     public CursoResponseDTO guardar(CursoRequestDTO dto) {
-        // Blindaje preventivo
         validarProfesorJefe(dto.getProfesorId());
         
         Curso c = new Curso(null, dto.getNombre(), dto.getSeccion(), dto.getProfesorId());
