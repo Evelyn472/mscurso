@@ -1,12 +1,21 @@
-FROM eclipse-temurin:17-jdk-jammy
-
+FROM eclipse-temurin:25-jdk AS builder
 WORKDIR /app
 
-COPY . .
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src ./src
 
 RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
+FROM eclipse-temurin:25-jdk
+LABEL maintainer="Evelyn - Proyecto Colegio"
+
+WORKDIR /app
+
+COPY --from=builder /app/target/*.jar app.jar
+
 EXPOSE 8082
 
-CMD ["java","-jar","target/demo-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
